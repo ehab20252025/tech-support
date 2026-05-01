@@ -3,264 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك | موسوعة الدعم الفني</title>
+    <title>إيهاب تِك | مساعد الدعم الفني الذكي</title>
     
-    <!-- ربط التطبيق كـ PWA ليعمل كأيقونة على الموبايل -->
+    <!-- ربط التطبيق كـ PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2c3e50">
-    <link rel="shortcut icon" href="https://via.placeholder.com/192">
-
-    <!-- مكتبة الأيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
             --main-color: #2c3e50; /* لون البليزر الرمادي */
-            --accent-color: #3498db; /* الأزرق التقني */
+            --accent-color: #3498db;
             --bg-color: #f0f2f5;
-            --text-color: #333;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
+            margin: 0; padding: 0;
         }
 
-        /* الهيدر الاحترافي */
         .header {
             background: linear-gradient(135deg, var(--main-color), #34495e);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: white; padding: 30px 20px; text-align: center;
+            border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
         }
-
-        .header h1 { margin: 0; font-size: 24px; }
-        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
 
         .container { padding: 20px; max-width: 600px; margin: auto; }
 
-        /* صندوق البحث */
         .search-container { position: relative; margin-top: -30px; margin-bottom: 25px; }
         .search-box {
-            width: 100%;
-            padding: 15px 45px 15px 15px;
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            font-size: 16px;
-            outline: none;
-            box-sizing: border-box;
-            text-align: right;
-        }
-        .search-icon { position: absolute; right: 15px; top: 15px; color: #999; }
-
-        /* الأزرار */
-        .btn-add {
-            background-color: var(--accent-color);
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; padding: 15px 45px 15px 15px;
+            border-radius: 15px; border: none; font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); outline: none; box-sizing: border-box;
         }
 
-        .btn-save {
-            background-color: #27ae60;
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
+        .btn-action {
+            background-color: var(--accent-color); color: white; width: 100%;
+            padding: 12px; border: none; border-radius: 10px;
+            font-weight: bold; cursor: pointer; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        /* قسم إضافة عطل جديد */
         .form-section {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: white; padding: 20px; border-radius: 15px;
+            margin-bottom: 20px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .input-field {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
         }
 
-        /* كروت عرض الأعطال */
         .card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border-right: 5px solid var(--accent-color);
+            background: white; padding: 20px; border-radius: 15px;
+            margin-bottom: 15px; border-right: 5px solid var(--accent-color);
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
         }
 
-        .card:active { transform: scale(0.98); }
-        .card h3 { margin: 0; color: var(--main-color); font-size: 18px; }
-        .card p { color: #666; font-size: 14px; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
-        .card .tag {
-            background: #e8f4fd;
-            color: var(--accent-color);
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 8px;
+        .card h3 { margin: 0; color: var(--main-color); }
+        .card p { color: #666; font-size: 14px; margin-top: 10px; white-space: pre-line; }
+        
+        .preview-img {
+            width: 100%; border-radius: 10px; margin-top: 10px; display: none;
+        }
+
+        .badge {
+            background: #e8f4fd; color: var(--accent-color);
+            font-size: 11px; padding: 4px 10px; border-radius: 20px;
         }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1><i class="fas fa-microchip"></i> إيهاب تِك | Ehab Tech</h1>
-    <p>أخصائي تشغيل نظم - موسوعة الدعم الفني الذكي</p>
+    <h1><i class="fas fa-robot"></i> إيهاب تِك الذكي</h1>
+    <p>أخصائي تشغيل نظم - ذاكرة الدعم الفني</p>
 </div>
 
 <div class="container">
-    <!-- محرك البحث -->
     <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن عطل (HP, Lexmark, يوزرات...)">
+        <input type="text" id="searchInput" class="search-box" placeholder="اسأل الذكاء الاصطناعي أو ابحث عن عطل...">
     </div>
 
-    <!-- زر التحكم في الإضافة -->
-    <button class="btn-add" id="toggleFormBtn">
-        <i class="fas fa-plus-circle"></i> إضافة حل جديد للموسوعة
-    </button>
+    <button class="btn-action" id="toggleForm"><i class="fas fa-plus"></i> إضافة عطل/تصوير مشكلة</button>
 
-    <!-- فورم إضافة عطل جديد -->
-    <div class="form-section" id="addFormSection">
-        <h3 style="margin-top:0;">توثيق عطل جديد</h3>
-        <input type="text" id="titleInput" class="input-field" placeholder="عنوان العطل (مثال: HP 432 - عطل سحب)">
-        <textarea id="solveInput" class="input-field" rows="4" placeholder="خطوات الحل بالتفصيل..."></textarea>
-        <select id="categoryInput" class="input-field">
-            <option value="طابعات">طابعات (HP / Lexmark)</option>
-            <option value="برمجيات">برمجيات (نقاط البيع / ويندوز)</option>
-            <option value="شبكات">شبكات وأجهزة (راوتر / سيرفر)</option>
-        </select>
-        <button class="btn-save" onclick="saveNewIssue()">حفظ في الموسوعة</button>
+    <div class="form-section" id="addForm">
+        <input type="text" id="titleInput" class="input-field" placeholder="عنوان العطل (مثلاً: HP 432 - حشر)">
+        <textarea id="solveInput" class="input-field" rows="3" placeholder="الحل (اتركه فارغاً ليسأل الذكاء الاصطناعي)"></textarea>
+        
+        <!-- ميزة التصوير المباشر -->
+        <label for="cameraInput" class="btn-action" style="background:#95a5a6;">
+            <i class="fas fa-camera"></i> تصوير/إرفاق صورة
+        </label>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImage(this)">
+        <img id="imgPreview" class="preview-img">
+
+        <button class="btn-action" style="background:#27ae60;" onclick="processSubmission()">حفظ ومعالجة</button>
     </div>
 
-    <!-- مكان عرض النتائج -->
-    <div id="resultsContainer"></div>
+    <div id="results"></div>
 </div>
 
 <script>
-    // قاعدة بيانات أولية مستوحاة من طبيعة عملك
     let database = [
-        { 
-            title: "HP 432 - عطل 59.F0", 
-            solve: "1. افصل كابل الطاقة لمدة 30 ثانية.\n2. تأكد من سلامة تروس الموتور الخلفي.\n3. تأكد من عدم وجود حشر ورق في وحدة السخان.", 
-            category: "طابعات" 
-        },
-        { 
-            title: "يوزرات نقاط البيع - خطأ في الدخول", 
-            solve: "1. تأكد من اتصال الجهاز بالشبكة الداخلية.\n2. راجع إعدادات الـ Proxy في متصفح إيدج.\n3. اطلب إعادة تعيين كلمة المرور من جهة الإدارة.", 
-            category: "برمجيات" 
-        },
-        { 
-            title: "Lexmark - خطأ 121.01 (Fuser)", 
-            solve: "1. فحص كابلات وحدة السخان.\n2. تجربة إعادة ضبط المصنع من قائمة الإعدادات المتقدمة.", 
-            category: "طابعات" 
-        }
+        { title: "HP 432 - عطل 59.F0", solve: "مشكلة في محرك النقل. فحص التروس الخلفية.", category: "طابعات", img: null },
+        { title: "يوزرات نقاط البيع", solve: "تأكد من إعدادات الـ Proxy وتحديث الوقت.", category: "برمجيات", img: null }
     ];
 
-    const resultsContainer = document.getElementById('resultsContainer');
-    const searchInput = document.getElementById('searchInput');
-    const addFormSection = document.getElementById('addFormSection');
-    const toggleFormBtn = document.getElementById('toggleFormBtn');
-
-    // إظهار وإخفاء نموذج الإضافة
-    toggleFormBtn.onclick = () => {
-        if (addFormSection.style.display === 'block') {
-            addFormSection.style.display = 'none';
-            toggleFormBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة حل جديد للموسوعة';
-        } else {
-            addFormSection.style.display = 'block';
-            toggleFormBtn.innerHTML = '<i class="fas fa-times-circle"></i> إغلاق نافذة الإضافة';
+    function handleImage(input) {
+        const preview = document.getElementById('imgPreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
         }
-    };
+    }
 
-    // دالة عرض النتائج وتصفيتها
-    function renderResults(query = '') {
-        resultsContainer.innerHTML = '';
-        const filteredData = database.filter(item => 
-            item.title.toLowerCase().includes(query.toLowerCase()) || 
-            item.solve.toLowerCase().includes(query.toLowerCase())
-        );
+    async function processSubmission() {
+        const title = document.getElementById('titleInput').value;
+        let solve = document.getElementById('solveInput').value;
+        const img = document.getElementById('imgPreview').src;
 
-        if(filteredData.length === 0) {
-            resultsContainer.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">لا توجد نتائج مطابقة لبحثك..</p>';
-            return;
+        if (!title) return alert("يرجى كتابة عنوان العطل");
+
+        // إذا كان الحل فارغاً، نقوم بمحاكاة رد الذكاء الاصطناعي
+        if (!solve) {
+            solve = `[رد تلقائي ذكي]: بناءً على خبرة م/ إيهاب في ${title}، يرجى فحص التوصيلات وتصفير العدادات. (سيتم ربط هذا الرد بـ Gemini لاحقاً)`;
         }
 
-        filteredData.forEach(item => {
-            resultsContainer.innerHTML += `
+        database.unshift({ title, solve, category: "FAQ / ذكاء اصطناعي", img: img.startsWith('data') ? img : null });
+        render();
+        
+        // إعادة تهيئة
+        document.getElementById('addForm').style.display = 'none';
+        document.getElementById('titleInput').value = '';
+        document.getElementById('solveInput').value = '';
+        document.getElementById('imgPreview').style.display = 'none';
+    }
+
+    function render(filter = '') {
+        const container = document.getElementById('results');
+        container.innerHTML = '';
+        database.filter(i => i.title.includes(filter) || i.solve.includes(filter)).forEach(item => {
+            container.innerHTML += `
                 <div class="card">
-                    <span class="tag">${item.category}</span>
+                    <span class="badge">${item.category}</span>
                     <h3>${item.title}</h3>
                     <p>${item.solve}</p>
-                </div>
-            `;
+                    ${item.img ? `<img src="${item.img}" style="width:100%; border-radius:10px; margin-top:10px;">` : ''}
+                </div>`;
         });
     }
 
-    // حفظ عطل جديد في القائمة
-    function saveNewIssue() {
-        const title = document.getElementById('titleInput').value;
-        const solve = document.getElementById('solveInput').value;
-        const category = document.getElementById('categoryInput').value;
+    document.getElementById('toggleForm').onclick = () => {
+        const f = document.getElementById('addForm');
+        f.style.display = f.style.display === 'block' ? 'none' : 'block';
+    };
 
-        if (title.trim() && solve.trim()) {
-            database.unshift({ title, solve, category });
-            renderResults();
-            
-            // إعادة ضبط الحقول
-            document.getElementById('titleInput').value = '';
-            document.getElementById('solveInput').value = '';
-            addFormSection.style.display = 'none';
-            toggleFormBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة حل جديد للموسوعة';
-            
-            alert("تم حفظ الحل الجديد بنجاح في النسخة الحالية!");
-        } else {
-            alert("يرجى تعبئة العنوان ووصف الحل أولاً.");
-        }
-    }
-
-    // مراقبة كتابة المستخدم في مربع البحث
-    searchInput.addEventListener('input', (e) => {
-        renderResults(e.target.value);
-    });
-
-    // التشغيل المبدئي عند فتح الصفحة
-    renderResults();
+    document.getElementById('searchInput').oninput = e => render(e.target.value);
+    render();
 </script>
-
 </body>
 </html>
