@@ -3,111 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك | موسوعة أعطال الهيئة</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>إيهاب تِك AI | منصة دعم الأخصائيين</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --main: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; }
-        .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 20px 20px; }
-        .container { padding: 15px; max-width: 700px; margin: auto; }
-        .search-box { width: 100%; padding: 15px; border-radius: 12px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; box-sizing: border-box; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .form-card { background: white; padding: 20px; border-radius: 15px; display: none; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .input-item { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-right: 6px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card h3 { margin: 0 0 10px 0; font-size: 16px; color: var(--main); }
-        .card p { margin: 0; color: #555; font-size: 14px; line-height: 1.6; }
-        .model-list { max-height: 150px; overflow-y: auto; background: #eee; border-radius: 5px; display: none; }
-        .model-option { padding: 8px; cursor: pointer; border-bottom: 1px solid #ddd; font-size: 13px; }
-        .model-option:hover { background: #d1d8de; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .container { padding: 15px; max-width: 650px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .input-item { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; }
+        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; }
+        #aiResponse { background: #f0f7ff; padding: 18px; border-radius: 15px; margin-top: 15px; display: none; border-right: 6px solid var(--accent); line-height: 1.7; font-size: 15px; }
+        .config-area { font-size: 12px; text-align: center; margin-top: 20px; color: #7f8c8d; }
+        .loader { display: none; text-align: center; margin: 15px 0; color: var(--accent); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2><i class="fas fa-tools"></i> إيهاب تِك - دعم 4000 مكتب</h2>
-    <p>أخصائي تشغيل نظم - حلول الأعطال الفنية</p>
+    <h1><i class="fas fa-brain"></i> إيهاب تِك AI</h1>
+    <p>مساعد أخصائي تشغيل النظم الذكي</p>
 </div>
 
 <div class="container">
-    <input type="text" id="mainSearch" class="search-box" placeholder="ابحث عن موديل أو عطل محدد...">
-    
-    <button class="btn" onclick="toggleForm()"><i class="fas fa-plus-circle"></i> توثيق عطل جديد</button>
-
-    <div id="issueForm" class="form-card">
-        <input type="text" id="modelInput" class="input-item" placeholder="اكتب اسم الموديل (مثلاً: HP 432)" oninput="filterModels(this.value)">
-        <div id="modelSuggestions" class="model-list"></div>
+    <div class="card">
+        <h3 style="margin-top:0;"><i class="fas fa-search"></i> تحليل أعطال الهيئة</h3>
+        <input type="text" id="modelSearch" class="input-item" placeholder="اكتب اسم الموديل (مثل: Aruba 1930 أو HP 432)...">
         
-        <textarea id="solveInput" class="input-item" rows="3" placeholder="اشرح المشكلة وطريقة الحل..."></textarea>
+        <button class="btn" onclick="askAI()"><i class="fas fa-magic"></i> استشارة الذكاء الاصطناعي</button>
         
-        <label class="btn" style="background:#7f8c8d;"><i class="fas fa-camera"></i> تصوير العطل<input type="file" accept="image/*" capture="environment" hidden onchange="previewImg(this)"></label>
-        <img id="imgPrev" style="width:100%; border-radius:8px; display:none; margin-bottom:10px;">
-        
-        <button class="btn" style="background:#27ae60;" onclick="saveIssue()">حفظ في الموسوعة</button>
+        <div class="loader" id="loader"><i class="fas fa-circle-notch fa-spin"></i> جاري استدعاء الخبرة التقنية...</div>
+        <div id="aiResponse"></div>
     </div>
 
-    <div id="results"></div>
+    <div class="config-area">
+        <span onclick="setupKey()" style="cursor:pointer; text-decoration: underline;"><i class="fas fa-key"></i> إعداد/تغيير مفتاح API</span>
+    </div>
 </div>
 
 <script>
-    // القائمة المستخرجة من ملف Book1.xlsx
-    const allModels = ["3COM-3CFSU08", "ARUBA-1930", "HP-432", "LEXMARK-MS312", "CISCO-2960", "BITEL-IC3600", "ZEBRA-GC420t", "HONEYWELL-1250g"]; // (تم اختصارها للعرض، ستشمل الـ 146 موديلاً)
+    // عند التشغيل، التأكد من وجود المفتاح
+    let API_KEY = localStorage.getItem('gemini_api_key');
 
-    let history = JSON.parse(localStorage.getItem('techHistory')) || [];
-
-    function filterModels(val) {
-        const div = document.getElementById('modelSuggestions');
-        div.innerHTML = '';
-        if(!val) { div.style.display = 'none'; return; }
-        const matches = allModels.filter(m => m.toLowerCase().includes(val.toLowerCase()));
-        matches.forEach(m => {
-            const opt = document.createElement('div');
-            opt.className = 'model-option';
-            opt.innerText = m;
-            opt.onclick = () => { document.getElementById('modelInput').value = m; div.style.display = 'none'; };
-            div.appendChild(opt);
-        });
-        div.style.display = matches.length ? 'block' : 'none';
+    function setupKey() {
+        const key = prompt("يرجى إدخال مفتاح Gemini API الخاص بك لمرة واحدة:");
+        if (key) {
+            localStorage.setItem('gemini_api_key', key);
+            API_KEY = key;
+            alert("تم حفظ المفتاح بنجاح! يمكنك الآن استخدام الذكاء الاصطناعي.");
+        }
     }
 
-    function previewImg(input) {
-        const reader = new FileReader();
-        reader.onload = e => { document.getElementById('imgPrev').src = e.target.result; document.getElementById('imgPrev').style.display = 'block'; };
-        reader.readAsDataURL(input.files[0]);
+    async function askAI() {
+        if (!API_KEY) {
+            setupKey();
+            return;
+        }
+
+        const model = document.getElementById('modelSearch').value;
+        const responseDiv = document.getElementById('aiResponse');
+        const loader = document.getElementById('loader');
+
+        if (!model) return alert("يرجى كتابة اسم الموديل");
+
+        loader.style.display = 'block';
+        responseDiv.style.display = 'none';
+
+        try {
+            const promptText = `أنت أخصائي تشغيل نظم خبير. الموديل هو ${model}. قدم لي قائمة نقطية بأشهر الأعطال الشائعة لهذا الجهاز وحلولها التقنية السريعة بلهجة مهنية واضحة.`;
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: promptText }] }]
+                })
+            });
+
+            const data = await response.json();
+            const resultText = data.candidates[0].content.parts[0].text;
+            
+            responseDiv.innerHTML = "<strong>توصيات إيهاب تِك الذكية:</strong><br><br>" + resultText.replace(/\n/g, "<br>");
+            responseDiv.style.display = 'block';
+        } catch (error) {
+            alert("خطأ: تأكد من صحة المفتاح أو اتصال الإنترنت.");
+            console.error(error);
+        } finally {
+            loader.style.display = 'none';
+        }
     }
-
-    function saveIssue() {
-        const model = document.getElementById('modelInput').value;
-        const solve = document.getElementById('solveInput').value;
-        const img = document.getElementById('imgPrev').src;
-        if(!model || !solve) return alert("اكمل البيانات");
-
-        history.unshift({ model, solve, img: img.startsWith('data') ? img : null, date: new Date().toLocaleDateString() });
-        localStorage.setItem('techHistory', JSON.stringify(history));
-        render();
-        toggleForm();
-    }
-
-    function render(search = '') {
-        const res = document.getElementById('results');
-        res.innerHTML = '';
-        history.filter(h => h.model.includes(search) || h.solve.includes(search)).forEach(h => {
-            res.innerHTML += `
-                <div class="card">
-                    <h3>${h.model} <small style="float:left; font-size:10px;">${h.date}</small></h3>
-                    <p>${h.solve}</p>
-                    ${h.img ? `<img src="${h.img}" style="width:100%; margin-top:10px; border-radius:8px;">` : ''}
-                </div>`;
-        });
-    }
-
-    function toggleForm() { 
-        const f = document.getElementById('issueForm'); 
-        f.style.display = f.style.display === 'block' ? 'none' : 'block'; 
-    }
-
-    document.getElementById('mainSearch').oninput = e => render(e.target.value);
-    render();
 </script>
 </body>
 </html>
