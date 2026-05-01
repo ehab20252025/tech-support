@@ -1,43 +1,129 @@
-async function analyzeWithAI() {
-    if(!API_KEY) return setApiKey();
-    
-    const loader = document.getElementById('loader');
-    const responseDiv = document.getElementById('response');
-    loader.style.display = 'block';
-    responseDiv.style.display = 'none';
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إيهاب تِك AI | محلل الأعطال الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 25px 25px; }
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .btn { background: #3498db; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; font-size: 16px; }
+        #preview { width: 100%; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid #ddd; }
+        #response { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: right; line-height: 1.8; border-right: 6px solid var(--accent); white-space: pre-wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .loader { display: none; margin: 20px 0; color: var(--accent); font-weight: bold; text-align: center; }
+        .footer-link { font-size: 11px; color: #bbb; margin-top: 30px; text-align: center; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
 
-    // السطر ده هو اللي فيه السر - تغيير المسار لـ v1 وموديل gemini-1.5-flash مباشرة
-    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+<div class="header">
+    <h1><i class="fas fa-robot"></i> إيهاب تِك AI</h1>
+    <p>أخصائي تشغيل نظم - تحليل الأعطال البصري</p>
+</div>
 
-    const payload = {
-        contents: [{
-            parts: [
-                { text: "أنت أخصائي تشغيل نظم خبير. حلل الصورة المرفقة، تعرف على الجهاز، واشرح العطل الموجود وقدم الحل التقني المناسب بلهجة مصرية بسيطة." },
-                { inline_data: { mime_type: "image/jpeg", data: base64Data } }
-            ]
-        }]
-    };
-
-    try {
-        const res = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
+<div class="container">
+    <div class="card">
+        <h3><i class="fas fa-camera"></i> تصوير أو إرفاق صورة</h3>
+        <p style="font-size:13px; color:#666;">ارفع صورة العطل (كاميرا أو استوديو) ليقوم الذكاء الاصطناعي بحلها.</p>
         
-        if(data.error) {
-            // لو لسه فيه مشكلة، هيطبع لك السبب الحقيقي هنا بدل 404
-            responseDiv.innerHTML = "<strong>تنبيه تقني:</strong><br>" + data.error.message;
-        } else {
-            const aiText = data.candidates[0].content.parts[0].text;
-            responseDiv.innerHTML = "<strong>🔍 نتيجة الفحص الذكي:</strong><br><br>" + aiText.replace(/\n/g, "<br>");
+        <label class="btn" style="background: #27ae60;">
+            <i class="fas fa-images"></i> اختيار صورة / تصوير عطل
+            <input type="file" id="imageInput" accept="image/*" hidden onchange="handleImage(this)">
+        </label>
+        
+        <img id="preview">
+        
+        <button id="analyzeBtn" class="btn" style="display:none; background: var(--accent);" onclick="analyzeWithAI()">
+            <i class="fas fa-magic"></i> ابدأ التحليل الذكي الآن
+        </button>
+
+        <div class="loader" id="loader">
+            <i class="fas fa-microchip fa-spin"></i> جاري فحص الصورة واستخراج "الزتونة"...
+        </div>
+    </div>
+
+    <div id="response"></div>
+    <div class="footer-link" onclick="setApiKey()">إعداد مفتاح API الجديد</div>
+</div>
+
+<script>
+    let API_KEY = localStorage.getItem('ehab_tech_key_vfinal');
+    let base64Data = "";
+
+    function setApiKey() {
+        const key = prompt("يرجى إدخال مفتاح Gemini API الخاص بك:");
+        if(key) { 
+            localStorage.setItem('ehab_tech_key_vfinal', key); 
+            API_KEY = key; 
+            alert("تم حفظ المفتاح بنجاح!"); 
+            location.reload();
         }
-        responseDiv.style.display = 'block';
-    } catch (err) {
-        alert("فشل في الاتصال بالسيرفر. تأكد من جودة الإنترنت.");
-    } finally {
-        loader.style.display = 'none';
     }
-}
+
+    function handleImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                base64Data = e.target.result.split(',')[1];
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('analyzeBtn').style.display = 'flex';
+                document.getElementById('response').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function analyzeWithAI() {
+        if(!API_KEY) return setApiKey();
+        
+        const loader = document.getElementById('loader');
+        const responseDiv = document.getElementById('response');
+        const btn = document.getElementById('analyzeBtn');
+
+        loader.style.display = 'block';
+        responseDiv.style.display = 'none';
+        btn.disabled = true;
+
+        // تم استخدام v1beta لضمان التوافق مع ميزات الـ Vision وحل خطأ 404
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+        const payload = {
+            contents: [{
+                parts: [
+                    { text: "أنت أخصائي تشغيل نظم خبير في أعطال الهيئة. حلل الصورة المرفقة، تعرف على الجهاز، اشرح العطل الظاهر (سواء كان رسالة خطأ على شاشة أو إيصال مرفوض)، وقدم الحل التقني المناسب بلهجة مصرية مهنية بسيطة ومختصرة." },
+                    { inline_data: { mime_type: "image/jpeg", data: base64Data } }
+                ]
+            }]
+        };
+
+        try {
+            const res = await fetch(apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            
+            if(data.error) {
+                responseDiv.innerHTML = "<strong>تنبيه تقني:</strong><br>" + data.error.message;
+            } else {
+                const aiText = data.candidates[0].content.parts[0].text;
+                responseDiv.innerHTML = "<strong>🔍 نتيجة الفحص البصري:</strong><br><br>" + aiText.replace(/\n/g, "<br>");
+            }
+            responseDiv.style.display = 'block';
+        } catch (err) {
+            alert("فشل الاتصال بالسيرفر. يرجى التأكد من الإنترنت.");
+        } finally {
+            loader.style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
