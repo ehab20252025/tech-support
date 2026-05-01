@@ -3,168 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك | مساعد الدعم الفني الذكي</title>
-    
-    <!-- ربط التطبيق كـ PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2c3e50">
+    <title>إيهاب تِك | موسوعة أعطال الهيئة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root {
-            --main-color: #2c3e50; /* لون البليزر الرمادي */
-            --accent-color: #3498db;
-            --bg-color: #f0f2f5;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0; padding: 0;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--main-color), #34495e);
-            color: white; padding: 30px 20px; text-align: center;
-            border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
-        }
-
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-
-        .search-container { position: relative; margin-top: -30px; margin-bottom: 25px; }
-        .search-box {
-            width: 100%; padding: 15px 45px 15px 15px;
-            border-radius: 15px; border: none; font-size: 16px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); outline: none; box-sizing: border-box;
-        }
-
-        .btn-action {
-            background-color: var(--accent-color); color: white; width: 100%;
-            padding: 12px; border: none; border-radius: 10px;
-            font-weight: bold; cursor: pointer; margin-bottom: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        .form-section {
-            background: white; padding: 20px; border-radius: 15px;
-            margin-bottom: 20px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        .input-field {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
-        }
-
-        .card {
-            background: white; padding: 20px; border-radius: 15px;
-            margin-bottom: 15px; border-right: 5px solid var(--accent-color);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-
-        .card h3 { margin: 0; color: var(--main-color); }
-        .card p { color: #666; font-size: 14px; margin-top: 10px; white-space: pre-line; }
-        
-        .preview-img {
-            width: 100%; border-radius: 10px; margin-top: 10px; display: none;
-        }
-
-        .badge {
-            background: #e8f4fd; color: var(--accent-color);
-            font-size: 11px; padding: 4px 10px; border-radius: 20px;
-        }
+        :root { --main: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 20px 20px; }
+        .container { padding: 15px; max-width: 700px; margin: auto; }
+        .search-box { width: 100%; padding: 15px; border-radius: 12px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; box-sizing: border-box; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .form-card { background: white; padding: 20px; border-radius: 15px; display: none; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .input-item { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-right: 6px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card h3 { margin: 0 0 10px 0; font-size: 16px; color: var(--main); }
+        .card p { margin: 0; color: #555; font-size: 14px; line-height: 1.6; }
+        .model-list { max-height: 150px; overflow-y: auto; background: #eee; border-radius: 5px; display: none; }
+        .model-option { padding: 8px; cursor: pointer; border-bottom: 1px solid #ddd; font-size: 13px; }
+        .model-option:hover { background: #d1d8de; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1><i class="fas fa-robot"></i> إيهاب تِك الذكي</h1>
-    <p>أخصائي تشغيل نظم - ذاكرة الدعم الفني</p>
+    <h2><i class="fas fa-tools"></i> إيهاب تِك - دعم 4000 مكتب</h2>
+    <p>أخصائي تشغيل نظم - حلول الأعطال الفنية</p>
 </div>
 
 <div class="container">
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-box" placeholder="اسأل الذكاء الاصطناعي أو ابحث عن عطل...">
-    </div>
+    <input type="text" id="mainSearch" class="search-box" placeholder="ابحث عن موديل أو عطل محدد...">
+    
+    <button class="btn" onclick="toggleForm()"><i class="fas fa-plus-circle"></i> توثيق عطل جديد</button>
 
-    <button class="btn-action" id="toggleForm"><i class="fas fa-plus"></i> إضافة عطل/تصوير مشكلة</button>
-
-    <div class="form-section" id="addForm">
-        <input type="text" id="titleInput" class="input-field" placeholder="عنوان العطل (مثلاً: HP 432 - حشر)">
-        <textarea id="solveInput" class="input-field" rows="3" placeholder="الحل (اتركه فارغاً ليسأل الذكاء الاصطناعي)"></textarea>
+    <div id="issueForm" class="form-card">
+        <input type="text" id="modelInput" class="input-item" placeholder="اكتب اسم الموديل (مثلاً: HP 432)" oninput="filterModels(this.value)">
+        <div id="modelSuggestions" class="model-list"></div>
         
-        <!-- ميزة التصوير المباشر -->
-        <label for="cameraInput" class="btn-action" style="background:#95a5a6;">
-            <i class="fas fa-camera"></i> تصوير/إرفاق صورة
-        </label>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImage(this)">
-        <img id="imgPreview" class="preview-img">
-
-        <button class="btn-action" style="background:#27ae60;" onclick="processSubmission()">حفظ ومعالجة</button>
+        <textarea id="solveInput" class="input-item" rows="3" placeholder="اشرح المشكلة وطريقة الحل..."></textarea>
+        
+        <label class="btn" style="background:#7f8c8d;"><i class="fas fa-camera"></i> تصوير العطل<input type="file" accept="image/*" capture="environment" hidden onchange="previewImg(this)"></label>
+        <img id="imgPrev" style="width:100%; border-radius:8px; display:none; margin-bottom:10px;">
+        
+        <button class="btn" style="background:#27ae60;" onclick="saveIssue()">حفظ في الموسوعة</button>
     </div>
 
     <div id="results"></div>
 </div>
 
 <script>
-    let database = [
-        { title: "HP 432 - عطل 59.F0", solve: "مشكلة في محرك النقل. فحص التروس الخلفية.", category: "طابعات", img: null },
-        { title: "يوزرات نقاط البيع", solve: "تأكد من إعدادات الـ Proxy وتحديث الوقت.", category: "برمجيات", img: null }
-    ];
+    // القائمة المستخرجة من ملف Book1.xlsx
+    const allModels = ["3COM-3CFSU08", "ARUBA-1930", "HP-432", "LEXMARK-MS312", "CISCO-2960", "BITEL-IC3600", "ZEBRA-GC420t", "HONEYWELL-1250g"]; // (تم اختصارها للعرض، ستشمل الـ 146 موديلاً)
 
-    function handleImage(input) {
-        const preview = document.getElementById('imgPreview');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+    let history = JSON.parse(localStorage.getItem('techHistory')) || [];
+
+    function filterModels(val) {
+        const div = document.getElementById('modelSuggestions');
+        div.innerHTML = '';
+        if(!val) { div.style.display = 'none'; return; }
+        const matches = allModels.filter(m => m.toLowerCase().includes(val.toLowerCase()));
+        matches.forEach(m => {
+            const opt = document.createElement('div');
+            opt.className = 'model-option';
+            opt.innerText = m;
+            opt.onclick = () => { document.getElementById('modelInput').value = m; div.style.display = 'none'; };
+            div.appendChild(opt);
+        });
+        div.style.display = matches.length ? 'block' : 'none';
     }
 
-    async function processSubmission() {
-        const title = document.getElementById('titleInput').value;
-        let solve = document.getElementById('solveInput').value;
-        const img = document.getElementById('imgPreview').src;
+    function previewImg(input) {
+        const reader = new FileReader();
+        reader.onload = e => { document.getElementById('imgPrev').src = e.target.result; document.getElementById('imgPrev').style.display = 'block'; };
+        reader.readAsDataURL(input.files[0]);
+    }
 
-        if (!title) return alert("يرجى كتابة عنوان العطل");
+    function saveIssue() {
+        const model = document.getElementById('modelInput').value;
+        const solve = document.getElementById('solveInput').value;
+        const img = document.getElementById('imgPrev').src;
+        if(!model || !solve) return alert("اكمل البيانات");
 
-        // إذا كان الحل فارغاً، نقوم بمحاكاة رد الذكاء الاصطناعي
-        if (!solve) {
-            solve = `[رد تلقائي ذكي]: بناءً على خبرة م/ إيهاب في ${title}، يرجى فحص التوصيلات وتصفير العدادات. (سيتم ربط هذا الرد بـ Gemini لاحقاً)`;
-        }
-
-        database.unshift({ title, solve, category: "FAQ / ذكاء اصطناعي", img: img.startsWith('data') ? img : null });
+        history.unshift({ model, solve, img: img.startsWith('data') ? img : null, date: new Date().toLocaleDateString() });
+        localStorage.setItem('techHistory', JSON.stringify(history));
         render();
-        
-        // إعادة تهيئة
-        document.getElementById('addForm').style.display = 'none';
-        document.getElementById('titleInput').value = '';
-        document.getElementById('solveInput').value = '';
-        document.getElementById('imgPreview').style.display = 'none';
+        toggleForm();
     }
 
-    function render(filter = '') {
-        const container = document.getElementById('results');
-        container.innerHTML = '';
-        database.filter(i => i.title.includes(filter) || i.solve.includes(filter)).forEach(item => {
-            container.innerHTML += `
+    function render(search = '') {
+        const res = document.getElementById('results');
+        res.innerHTML = '';
+        history.filter(h => h.model.includes(search) || h.solve.includes(search)).forEach(h => {
+            res.innerHTML += `
                 <div class="card">
-                    <span class="badge">${item.category}</span>
-                    <h3>${item.title}</h3>
-                    <p>${item.solve}</p>
-                    ${item.img ? `<img src="${item.img}" style="width:100%; border-radius:10px; margin-top:10px;">` : ''}
+                    <h3>${h.model} <small style="float:left; font-size:10px;">${h.date}</small></h3>
+                    <p>${h.solve}</p>
+                    ${h.img ? `<img src="${h.img}" style="width:100%; margin-top:10px; border-radius:8px;">` : ''}
                 </div>`;
         });
     }
 
-    document.getElementById('toggleForm').onclick = () => {
-        const f = document.getElementById('addForm');
-        f.style.display = f.style.display === 'block' ? 'none' : 'block';
-    };
+    function toggleForm() { 
+        const f = document.getElementById('issueForm'); 
+        f.style.display = f.style.display === 'block' ? 'none' : 'block'; 
+    }
 
-    document.getElementById('searchInput').oninput = e => render(e.target.value);
+    document.getElementById('mainSearch').oninput = e => render(e.target.value);
     render();
 </script>
 </body>
