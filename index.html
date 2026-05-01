@@ -3,57 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك AI | محلل الصور الفني</title>
+    <title>إيهاب تِك AI | الرؤية الفنية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 0; }
         .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 25px 25px; }
-        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .container { padding: 15px; max-width: 650px; margin: auto; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
-        #preview { width: 100%; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid #ddd; }
+        #preview { width: 100%; border-radius: 12px; display: none; margin-top: 15px; border: 1px solid #ddd; }
         #response { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: right; line-height: 1.8; border-right: 6px solid var(--accent); white-space: pre-wrap; }
         .loader { display: none; margin: 20px 0; color: var(--accent); font-weight: bold; }
+        .key-link { font-size: 11px; color: #999; margin-top: 20px; text-align: center; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1><i class="fas fa-eye"></i> إيهاب تِك - الرؤية الذكية</h1>
-    <p>تحليل صور الأعطال (كاميرا / استوديو)</p>
+    <h1><i class="fas fa-eye"></i> إيهاب تِك - العين الذكية</h1>
+    <p>تحليل أعطال الهيئة بالذكاء الاصطناعي</p>
 </div>
 
 <div class="container">
     <div class="card">
-        <h3><i class="fas fa-upload"></i> ارفع صورة العطل</h3>
-        <p style="font-size:13px; color:#666;">يمكنك تصوير العطل الآن أو اختيار صورة مخزنة من ذاكرة الموبايل.</p>
+        <h3><i class="fas fa-camera"></i> ارفع صورة العطل</h3>
+        <p style="font-size:13px; color:#666;">صور العطل أو اختر صورة من الاستوديو لتحليلها فوراً.</p>
         
         <label class="btn" style="background: #27ae60;">
-            <i class="fas fa-images"></i> اختيار صورة من الموبايل
+            <i class="fas fa-images"></i> اختيار صورة / تصوير
             <input type="file" id="imageInput" accept="image/*" hidden onchange="handleImage(this)">
         </label>
         
         <img id="preview">
         
         <button id="analyzeBtn" class="btn" style="display:none; background:#e67e22;" onclick="analyzeWithAI()">
-            <i class="fas fa-robot"></i> ابدأ التحليل بالذكاء الاصطناعي
+            <i class="fas fa-robot"></i> ابدأ التحليل الذكي
         </button>
 
-        <div class="loader" id="loader"><i class="fas fa-sync fa-spin"></i> جاري فحص الصورة واستخراج الحلول...</div>
+        <div class="loader" id="loader"><i class="fas fa-spinner fa-spin"></i> جاري استدعاء الخبرة التقنية...</div>
     </div>
 
     <div id="response"></div>
-    <p onclick="setApiKey()" style="font-size:11px; color:#bbb; margin-top:30px; cursor:pointer;">إعداد مفتاح الـ API</p>
+    <div class="key-link" onclick="setKey()"><i class="fas fa-key"></i> إعداد مفتاح API</div>
 </div>
 
 <script>
-    let API_KEY = localStorage.getItem('ehab_vision_key');
+    let API_KEY = localStorage.getItem('ehab_key_v3');
     let base64Data = "";
 
-    function setApiKey() {
+    function setKey() {
         const key = prompt("أدخل مفتاح Gemini API الخاص بك:");
-        if(key) { localStorage.setItem('ehab_vision_key', key); API_KEY = key; alert("تم الحفظ!"); }
+        if(key) { localStorage.setItem('ehab_key_v3', key); API_KEY = key; location.reload(); }
     }
 
     function handleImage(input) {
@@ -70,7 +71,7 @@
     }
 
     async function analyzeWithAI() {
-        if(!API_KEY) return setApiKey();
+        if(!API_KEY) return setKey();
         
         const loader = document.getElementById('loader');
         const responseDiv = document.getElementById('response');
@@ -80,28 +81,31 @@
         const payload = {
             contents: [{
                 parts: [
-                    { text: "أنت أخصائي تشغيل نظم خبير. انظر لهذه الصورة جيداً، تعرف على الجهاز (طابعة، سويتش، أو جهاز كمبيوتر)، حدد العطل الظاهر (مثل رسالة خطأ أو لمبات تحذير)، وقدم الحل التقني 'الزتونة' بلهجة مصرية مهنية." },
+                    { text: "أنت أخصائي تشغيل نظم. تعرف على الجهاز الموجود في الصورة، وحدد العطل الظاهر، واقترح الحل التقني المناسب بلهجة مصرية بسيطة ومختصرة." },
                     { inline_data: { mime_type: "image/jpeg", data: base64Data } }
                 ]
             }]
         };
 
         try {
-            // استخدام المسار الصحيح والمحدث لتجنب خطأ 404
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
+            // استخدام الرابط الأكثر شمولاً وتجربة
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
             const data = await res.json();
-            if(data.error) throw new Error(data.error.message);
-
-            const aiText = data.candidates[0].content.parts[0].text;
-            responseDiv.innerHTML = "<strong>🔍 تحليل إيهاب تِك البصري:</strong><br><br>" + aiText;
+            
+            if(data.error) {
+                responseDiv.innerHTML = "<strong>خطأ من السيرفر:</strong><br>" + data.error.message;
+            } else {
+                const aiText = data.candidates[0].content.parts[0].text;
+                responseDiv.innerHTML = "<strong>🔍 تحليل إيهاب تِك:</strong><br><br>" + aiText;
+            }
             responseDiv.style.display = 'block';
         } catch (err) {
-            alert("خطأ: " + err.message);
+            alert("فشل الاتصال: تأكد من الإنترنت والمفتاح.");
         } finally {
             loader.style.display = 'none';
         }
