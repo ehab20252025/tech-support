@@ -3,129 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك AI | مساعد أخصائي النظم</title>
+    <title>إيهاب تِك AI | محلل الصور الفني</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; }
-        .header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .container { padding: 20px; max-width: 700px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: relative; }
-        .input-item { width: 100%; padding: 14px; margin-top: 10px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
-        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; }
-        .btn:active { transform: scale(0.98); }
-        .btn-upload { background: #95a5a6; }
-        #aiResponse { background: #f0f7ff; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; border-right: 6px solid var(--accent); line-height: 1.8; font-size: 15px; white-space: pre-wrap; }
-        .loader { display: none; text-align: center; margin: 20px 0; color: var(--accent); font-weight: bold; }
-        .config-link { text-align: center; margin-top: 30px; font-size: 13px; color: #7f8c8d; text-decoration: underline; cursor: pointer; }
-        #previewImg { width: 100%; border-radius: 12px; margin-top: 15px; display: none; border: 1px solid #eee; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 25px 25px; }
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        #preview { width: 100%; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid #ddd; }
+        #response { background: #fff; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: right; line-height: 1.8; border-right: 6px solid var(--accent); white-space: pre-wrap; }
+        .loader { display: none; margin: 20px 0; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1><i class="fas fa-brain"></i> إيهاب تِك الذكي</h1>
-    <p>منصة دعم الـ 4000 مكتب | أخصائي تشغيل نظم</p>
+    <h1><i class="fas fa-eye"></i> إيهاب تِك - الرؤية الذكية</h1>
+    <p>تحليل صور الأعطال (كاميرا / استوديو)</p>
 </div>
 
 <div class="container">
     <div class="card">
-        <h3 style="margin:0;"><i class="fas fa-search-plus"></i> تحليل وحل أعطال الهيئة</h3>
-        <p style="font-size:13px; color:#666;">اكتب الموديل (من الـ 146 المعتمدين) أو ارفع صورة العطل للتحليل الذكي.</p>
+        <h3><i class="fas fa-upload"></i> ارفع صورة العطل</h3>
+        <p style="font-size:13px; color:#666;">يمكنك تصوير العطل الآن أو اختيار صورة مخزنة من ذاكرة الموبايل.</p>
         
-        <input type="text" id="modelSearch" class="input-item" placeholder="مثلاً: Lexmark MS312 أو Aruba 1930...">
-        
-        <label class="btn btn-upload">
-            <i class="fas fa-camera-retro"></i> ارفاق صورة (كاميرا أو استوديو)
-            <input type="file" id="imageFile" accept="image/*" hidden onchange="previewFile(this)">
+        <label class="btn" style="background: #27ae60;">
+            <i class="fas fa-images"></i> اختيار صورة من الموبايل
+            <input type="file" id="imageInput" accept="image/*" hidden onchange="handleImage(this)">
         </label>
-        <img id="previewImg">
-
-        <button class="btn" id="askBtn" onclick="askAI()">
-            <i class="fas fa-magic"></i> استشارة الذكاء الاصطناعي الآن
-        </button>
         
-        <div class="loader" id="loader"><i class="fas fa-cog fa-spin"></i> جاري الاتصال بخبرة Gemini التقنية...</div>
-        <div id="aiResponse"></div>
+        <img id="preview">
+        
+        <button id="analyzeBtn" class="btn" style="display:none; background:#e67e22;" onclick="analyzeWithAI()">
+            <i class="fas fa-robot"></i> ابدأ التحليل بالذكاء الاصطناعي
+        </button>
+
+        <div class="loader" id="loader"><i class="fas fa-sync fa-spin"></i> جاري فحص الصورة واستخراج الحلول...</div>
     </div>
 
-    <div class="config-link" onclick="updateApiKey()">
-        <i class="fas fa-key"></i> إعداد أو تحديث مفتاح API
-    </div>
+    <div id="response"></div>
+    <p onclick="setApiKey()" style="font-size:11px; color:#bbb; margin-top:30px; cursor:pointer;">إعداد مفتاح الـ API</p>
 </div>
 
 <script>
-    // جلب المفتاح من التخزين المحلي للمتصفح
-    let API_KEY = localStorage.getItem('ehab_tech_key');
+    let API_KEY = localStorage.getItem('ehab_vision_key');
+    let base64Data = "";
 
-    function updateApiKey() {
-        const key = prompt("يرجى إدخال مفتاح Gemini API الخاص بك:");
-        if (key) {
-            localStorage.setItem('ehab_tech_key', key);
-            API_KEY = key;
-            alert("تم حفظ المفتاح بنجاح!");
-        }
+    function setApiKey() {
+        const key = prompt("أدخل مفتاح Gemini API الخاص بك:");
+        if(key) { localStorage.setItem('ehab_vision_key', key); API_KEY = key; alert("تم الحفظ!"); }
     }
 
-    function previewFile(input) {
+    function handleImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = e => {
-                const img = document.getElementById('previewImg');
-                img.src = e.target.result;
-                img.style.display = 'block';
+            reader.onload = function(e) {
+                base64Data = e.target.result.split(',')[1];
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('analyzeBtn').style.display = 'flex';
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    async function askAI() {
-        if (!API_KEY) {
-            updateApiKey();
-            return;
-        }
-
-        const model = document.getElementById('modelSearch').value;
-        const responseDiv = document.getElementById('aiResponse');
+    async function analyzeWithAI() {
+        if(!API_KEY) return setApiKey();
+        
         const loader = document.getElementById('loader');
-
-        if (!model) return alert("يرجى كتابة اسم الموديل أولاً");
-
+        const responseDiv = document.getElementById('response');
         loader.style.display = 'block';
         responseDiv.style.display = 'none';
 
-        try {
-            // الرابط المحدث لحل مشكلة الـ 404
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
-            
-            const promptText = `بصفتك أخصائي تشغيل نظم خبير، الموديل هو ${model}. 
-            بناءً على قائمة الأجهزة المعتمدة في الهيئة، قدم لي:
-            1. أشهر 3 أعطال تقنية لهذا الجهاز.
-            2. حلول سريعة (الزتونة) لكل عطل.
-            اجعل الإجابة بلهجة مهنية مصرية واضحة ومختصرة.`;
+        const payload = {
+            contents: [{
+                parts: [
+                    { text: "أنت أخصائي تشغيل نظم خبير. انظر لهذه الصورة جيداً، تعرف على الجهاز (طابعة، سويتش، أو جهاز كمبيوتر)، حدد العطل الظاهر (مثل رسالة خطأ أو لمبات تحذير)، وقدم الحل التقني 'الزتونة' بلهجة مصرية مهنية." },
+                    { inline_data: { mime_type: "image/jpeg", data: base64Data } }
+                ]
+            }]
+        };
 
-            const response = await fetch(url, {
+        try {
+            // استخدام المسار الصحيح والمحدث لتجنب خطأ 404
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: promptText }] }]
-                })
+                body: JSON.stringify(payload)
             });
 
-            const data = await response.json();
-            
-            // معالجة الخطأ إذا لم تكن الإجابة ناجحة
-            if (data.error) {
-                throw new Error(data.error.message);
-            }
+            const data = await res.json();
+            if(data.error) throw new Error(data.error.message);
 
-            const resultText = data.candidates[0].content.parts[0].text;
-            responseDiv.innerHTML = "<strong>💡 توصيات ذكاء إيهاب تِك:</strong><br><br>" + resultText;
+            const aiText = data.candidates[0].content.parts[0].text;
+            responseDiv.innerHTML = "<strong>🔍 تحليل إيهاب تِك البصري:</strong><br><br>" + aiText;
             responseDiv.style.display = 'block';
-
-        } catch (error) {
-            alert("خطأ تقني: " + error.message);
-            console.error("Error details:", error);
+        } catch (err) {
+            alert("خطأ: " + err.message);
         } finally {
             loader.style.display = 'none';
         }
