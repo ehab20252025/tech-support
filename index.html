@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إيهاب تِك AI | محلل الأعطال الذكي</title>
+    <title>إيهاب تِك AI | محلل الأعطال</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f4f7f6; }
@@ -28,7 +28,7 @@
 <div class="container">
     <div class="card">
         <h3><i class="fas fa-camera"></i> تصوير أو إرفاق صورة</h3>
-        <p style="font-size:13px; color:#666;">ارفع صورة العطل (كاميرا أو استوديو) ليقوم الذكاء الاصطناعي بحلها.</p>
+        <p style="font-size:13px; color:#666;">ارفع صورة العطل (من الموبايل أو الكاميرا) وسأعطيك الحل فوراً.</p>
         
         <label class="btn" style="background: #27ae60;">
             <i class="fas fa-images"></i> اختيار صورة / تصوير عطل
@@ -42,22 +42,22 @@
         </button>
 
         <div class="loader" id="loader">
-            <i class="fas fa-microchip fa-spin"></i> جاري فحص الصورة واستخراج "الزتونة"...
+            <i class="fas fa-microchip fa-spin"></i> جاري استدعاء الخبرة التقنية وتحليل الصورة...
         </div>
     </div>
 
     <div id="response"></div>
-    <div class="footer-link" onclick="setApiKey()">إعداد مفتاح API الجديد</div>
+    <div class="footer-link" onclick="setApiKey()">إعداد مفتاح API</div>
 </div>
 
 <script>
-    let API_KEY = localStorage.getItem('ehab_tech_key_vfinal');
+    let API_KEY = localStorage.getItem('ehab_tech_key_final');
     let base64Data = "";
 
     function setApiKey() {
         const key = prompt("يرجى إدخال مفتاح Gemini API الخاص بك:");
         if(key) { 
-            localStorage.setItem('ehab_tech_key_vfinal', key); 
+            localStorage.setItem('ehab_tech_key_final', key); 
             API_KEY = key; 
             alert("تم حفظ المفتاح بنجاح!"); 
             location.reload();
@@ -89,13 +89,13 @@
         responseDiv.style.display = 'none';
         btn.disabled = true;
 
-        // تم استخدام v1beta لضمان التوافق مع ميزات الـ Vision وحل خطأ 404
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        // الرابط اللي إنت استنتجته يا بشمهندس وهو الأصح حالياً
+        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
         const payload = {
             contents: [{
                 parts: [
-                    { text: "أنت أخصائي تشغيل نظم خبير في أعطال الهيئة. حلل الصورة المرفقة، تعرف على الجهاز، اشرح العطل الظاهر (سواء كان رسالة خطأ على شاشة أو إيصال مرفوض)، وقدم الحل التقني المناسب بلهجة مصرية مهنية بسيطة ومختصرة." },
+                    { text: "أنت أخصائي تشغيل نظم خبير. حلل الصورة المرفقة، تعرف على الجهاز، واشرح العطل الموجود وقدم الحل التقني المناسب بلهجة مصرية بسيطة." },
                     { inline_data: { mime_type: "image/jpeg", data: base64Data } }
                 ]
             }]
@@ -114,11 +114,11 @@
                 responseDiv.innerHTML = "<strong>تنبيه تقني:</strong><br>" + data.error.message;
             } else {
                 const aiText = data.candidates[0].content.parts[0].text;
-                responseDiv.innerHTML = "<strong>🔍 نتيجة الفحص البصري:</strong><br><br>" + aiText.replace(/\n/g, "<br>");
+                responseDiv.innerHTML = "<strong>🔍 نتيجة الفحص الذكي:</strong><br><br>" + aiText.replace(/\n/g, "<br>");
             }
             responseDiv.style.display = 'block';
         } catch (err) {
-            alert("فشل الاتصال بالسيرفر. يرجى التأكد من الإنترنت.");
+            alert("فشل في الاتصال بالسيرفر. تأكد من جودة الإنترنت.");
         } finally {
             loader.style.display = 'none';
             btn.disabled = false;
